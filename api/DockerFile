@@ -1,0 +1,27 @@
+# Step 1: Use an official Node.js image as the base image
+FROM node:18-alpine
+
+# Step 2: Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Step 3: Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Step 4: Install the app dependencies
+RUN npm install
+
+# Step 5: Copy the rest of the application code
+COPY . .
+
+# Step 6: Expose the port that your app runs on
+EXPOSE 8800
+
+# Step 7: Define the environment variables for the MySQL connection
+ENV DB_HOST=db \
+    DB_USER=root \
+    DB_PASSWORD=your_password \
+    DB_NAME=cafe_manager \
+    PORT=8800
+
+# Step 8: Start the Node.js app
+CMD ["npm", "run", "dev"]

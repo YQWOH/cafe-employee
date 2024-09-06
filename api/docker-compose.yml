@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  # Node.js API Service
+  api:
+    build: .
+    ports:
+      - "8800:8800"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=your_password
+      - DB_NAME=cafe_manager
+      - PORT=8800
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/src/app
+    command: npm run dev
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your_password
+      MYSQL_DATABASE: cafe_manager
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
