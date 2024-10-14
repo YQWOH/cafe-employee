@@ -18,13 +18,16 @@ import {
   createOrUpdateEmployee,
   getCafes,
 } from "../services/employeeService";
+import dayjs from "dayjs";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 
 export default function AddEditEmployee() {
   const navigate = useNavigate();
   const { id } = useParams(); // To check if it's edit mode
   const queryClient = useQueryClient();
 
-  const { data: cafes } = useQuery({
+  const { data: cafes, isLoading } = useQuery({
     queryKey: ["cafes"],
     queryFn: getCafes,
   }); // Get list of cafés for dropdown
@@ -40,13 +43,16 @@ export default function AddEditEmployee() {
     handleSubmit,
     formState: { errors, isDirty },
     setValue,
+    trigger,
+    watch
   } = useForm({
     defaultValues: {
       name: "",
       email_address: "",
       phone_number: "",
       gender: "",
-      cafe: "",
+      cafe_id: "",
+      start_date: "",
     },
   });
 
@@ -64,12 +70,15 @@ export default function AddEditEmployee() {
       setValue("name", employee.name);
       setValue("email_address", employee.email_address);
       setValue("phone_number", employee.phone_number);
-      setValue("gender", employee.gender);
-      setValue("cafe", employee.cafe);
+      setValue("gender", employee.gender.toLowerCase());
+      setValue("cafe_id", String(employee.cafe_id));
+      setValue("start_date", employee.start_date ? dayjs(employee.start_date).format("YYYY-MM-DD") : "");
+      trigger();
     }
-  }, [employee, setValue]);
+  }, [employee, setValue, trigger]);
 
   const onSubmit = (data: any) => {
+    console.log('data: ', data);
     mutation.mutate({ ...data, id });
   };
 
@@ -83,6 +92,8 @@ export default function AddEditEmployee() {
       navigate("/employees");
     }
   };
+
+  if (isLoading) return <p>Loading...</p>;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -129,7 +140,8 @@ export default function AddEditEmployee() {
       <FormControl component="fieldset" margin="normal">
         <RadioGroup
           row
-          {...register("gender", { required: "Gender is required" })}
+          value={watch("gender")}
+          onChange={(e) => setValue("gender", e.target.value)}
         >
           <FormControlLabel value="male" control={<Radio />} label="Male" />
           <FormControlLabel value="female" control={<Radio />} label="Female" />
@@ -141,14 +153,32 @@ export default function AddEditEmployee() {
 
       <FormControl fullWidth margin="normal">
         <InputLabel id="cafe-label">Assigned Café (Optional)</InputLabel>
-        <Select labelId="cafe-label" {...register("cafe")}>
+        <Select
+          labelId="cafe-label"
+          value={watch("cafe_id")}
+          {...register("cafe_id")}
+          fullWidth
+        >
           <MenuItem value="">None</MenuItem>
           {cafes?.map((cafe: any) => (
-            <MenuItem key={cafe.id} value={cafe.id}>
+            <MenuItem key={cafe.id} value={String(cafe.id)}>
               {cafe.name}
             </MenuItem>
           ))}
         </Select>
+      </FormControl>
+
+      <FormControl fullWidth margin="normal">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            value={watch("start_date") ? dayjs(watch("start_date")) : null}
+            onChange={(newValue) => {
+              if (newValue) {
+                setValue("start_date", newValue.format("YYYY-MM-DD"));
+              }
+            }}
+          />
+        </LocalizationProvider>
       </FormControl>
 
       <Button type="submit" variant="contained" color="primary">

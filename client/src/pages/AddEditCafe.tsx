@@ -15,6 +15,7 @@ export default function AddEditCafe() {
     handleSubmit,
     formState: { errors, isDirty },
     setValue,
+    trigger
   } = useForm({
     defaultValues: {
       name: "",
@@ -23,7 +24,7 @@ export default function AddEditCafe() {
     },
   });
 
-  const { data: cafe } = useQuery({
+  const { data: cafe, isLoading } = useQuery({
     queryKey: ["cafe", id],
     queryFn: () => getCafeById(id!),
     enabled: !!id, // Only fetch when editing
@@ -42,8 +43,9 @@ export default function AddEditCafe() {
       setValue("name", cafe.name);
       setValue("description", cafe.description);
       setValue("location", cafe.location);
+      trigger();
     }
-  }, [cafe, setValue]);
+  }, [cafe, setValue, trigger]);
 
   const onSubmit = (data: any) => {
     mutation.mutate({ ...data, id });
@@ -60,6 +62,8 @@ export default function AddEditCafe() {
     }
   };
 
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <TextField
@@ -68,6 +72,19 @@ export default function AddEditCafe() {
           required: "Name is required",
           minLength: { value: 3, message: "Min 3 characters" },
           maxLength: { value: 50, message: "Max 50 characters" },
+          pattern: {
+            value: /^[a-zA-Z\s]*$/,
+            message: "Invalid name",
+          },
+          onChange: (e) => {
+            const value = e.target.value;
+            const isValid = /^[a-zA-Z\s]*$/.test(value);
+
+            if (isValid) {
+              setValue("name", value, { shouldValidate: true });
+            }
+            trigger("name");
+          }
         })}
         error={!!errors.name}
         helperText={errors.name?.message}
