@@ -1,5 +1,5 @@
 # Step 1: Use an official Node.js image as the base image
-FROM node:18-alpine
+FROM node:18
 
 # Step 2: Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Step 6: Build the React application for production
-RUN npm run build
+RUN npm install && npm rebuild && npm run build
 
 # Step 7: Use an official Nginx image as the base image for serving the React app
 FROM nginx:alpine
