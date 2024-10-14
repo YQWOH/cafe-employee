@@ -3,13 +3,18 @@ import { initializeDB } from '../db';
 let pool: any; // Declare pool globally
 
 // Initialize pool asynchronously
-(async () => {
-    pool = await initializeDB();
-})();
+const getPool = async () => {
+    if (!pool) {
+        pool = await initializeDB();
+    }
+    return pool;
+};
 
 export const employeesModel = {
     // Get employees filtered by cafe (if provided) and sorted by days worked
     getEmployees: async (cafe?: string) => {
+        const pool = await getPool();
+
         let query = `
             SELECT employees.id, employees.name, employees.email_address, employees.phone_number, 
                    DATEDIFF(CURDATE(), employee_cafe.start_date) AS days_worked, 

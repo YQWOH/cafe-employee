@@ -3,13 +3,17 @@ import { initializeDB } from '../db';
 let pool: any; // Declare pool globally
 
 // Initialize pool asynchronously
-(async () => {
-    pool = await initializeDB();
-})();
+const getPool = async () => {
+    if (!pool) {
+        pool = await initializeDB();
+    }
+    return pool;
+};
 
 export const cafesModel = {
     // Get all cafes
     getCafes: async (location?: string) => {
+        const pool = await getPool();
         let query = `
             SELECT cafes.id, cafes.name, cafes.description, cafes.logo, cafes.location, COUNT(employee_cafe.employee_id) AS employees
             FROM cafes
@@ -25,9 +29,11 @@ export const cafesModel = {
 
         query += ' GROUP BY cafes.id ORDER BY employees DESC';
 
+        query = query.replace(/\s+/g, ' ').trim();
+
         // Wait for the pool to initialize and execute the query
         const [rows]: any = await pool.query(query, params);
 
-        return rows;  // Return the rows with the data
+        return rows;
     },
 };

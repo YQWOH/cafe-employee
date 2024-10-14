@@ -30,12 +30,12 @@ export const employeeController = {
 
     // Create a new employee and establish the relationship with a cafe
     createEmployee: async (req: Request, res: Response): Promise<void> => {
-        const { id, name, email_address, phone_number, gender, cafe_id, start_date } = req.body;
+        const { name, email_address, phone_number, gender, cafe_id, start_date } = req.body;
 
         try {
-            const newEmployee = await employeeModel.create({ id, name, email_address, phone_number, gender });
+            const newEmployee = await employeeModel.create({ name, email_address, phone_number, gender });
             if (cafe_id && start_date) {
-                await employeeModel.assignToCafe(newEmployee.id, cafe_id, start_date);
+                await employeeModel.assignToCafe(newEmployee.id, cafe_id, start_date); // Now 'id' exists
             }
             res.status(201).json(newEmployee);
         } catch (error: any) {
