@@ -1,6 +1,3 @@
-// export default function Cafes() {
-//   return <h1>Cafes Page</h1>;
-// }
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCafes, deleteCafe } from "../services/cafeService";
 import { AgGridReact } from "ag-grid-react";
@@ -10,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 export default function Cafes() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  // Fetch cafes data using the correct object format for useQuery
   const { data: cafes, isLoading } = useQuery({
     queryKey: ["cafes"],
     queryFn: getCafes,
@@ -21,7 +16,7 @@ export default function Cafes() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteCafe(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cafes"] }); // Corrected
+      queryClient.invalidateQueries({ queryKey: ["cafes"] });
     },
   });
 
@@ -31,7 +26,7 @@ export default function Cafes() {
       field: "logo",
       cellRenderer: "imageRenderer",
       flex: 1,
-    }, // You can customize this later
+    },
     { headerName: "Name", field: "name", flex: 1 },
     { headerName: "Description", field: "description", flex: 1 },
     { headerName: "Employees", field: "employees", flex: 1 },
