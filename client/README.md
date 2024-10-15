@@ -9,6 +9,7 @@ This is a React-based frontend application for managing cafés and employees. It
 - Responsive UI using **Material-UI**.
 - Integrated with **Tanstack Query** for fetching and caching data from the backend API.
 - Dockerized for easy deployment and development.
+- Configurable API endpoints using a dedicated configuration file (config.ts).
 
 ## Tech Stack
 
@@ -27,13 +28,33 @@ Make sure you have the following installed:
 - [Docker](https://www.docker.com/get-started)
 - [npm](https://www.npmjs.com/) (comes with Node.js)
 
+## Configuration
+
+To allow for easy changes to API endpoints, the project uses a configuration file (src/config.ts). You can update API base URLs and endpoints within this file without needing to modify each service directly.
+
+### Example src/config.ts:
+
+```typescript
+const API_ENDPOINTS = {
+  BASE_URL: process.env.REACT_APP_API_BASE_URL || "http://localhost:8800",
+  CAFES: "/api/cafes",
+  CAFE: "/api/cafe",
+  EMPLOYEES: "/api/employees",
+  EMPLOYEE: "/api/employee",
+};
+
+export default API_ENDPOINTS;
+```
+
+You can change the BASE_URL and other endpoints by setting the REACT_APP_API_BASE_URL environment variable.
+
 ## Installation
 
 1. **Clone the repository**:
 
    ```bash
-   git clone https://github.com/your-repo/cafe-employee-manager-frontend.git
-   cd cafe-employee-manager-frontend
+   git clone https://github.com/YQWOH/cafe-employee.git
+   cd cafe-employee/client
    ```
 
 2. **Install dependencies and start development server**:

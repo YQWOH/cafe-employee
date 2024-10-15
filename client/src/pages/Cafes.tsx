@@ -12,7 +12,6 @@ export default function Cafes() {
     queryFn: getCafes,
   });
 
-  // Mutation for deleting a cafe
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteCafe(id),
     onSuccess: () => {

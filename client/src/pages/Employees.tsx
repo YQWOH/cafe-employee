@@ -1,6 +1,3 @@
-// export default function Employees() {
-//   return <h1>Employees Page</h1>;
-// }
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getEmployees, deleteEmployee } from "../services/employeeService";
 import "ag-grid-community/styles/ag-grid.css";
@@ -10,26 +7,15 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ColDef } from "ag-grid-community";
 
-// interface Employee {
-//   id: string;
-//   name: string;
-//   email_address: string;
-//   phone_number: string;
-//   days_worked: number;
-//   cafe: string;
-// }
-
 export default function Employees() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // Fetch employees data
   const { data: employees, isLoading } = useQuery({
     queryKey: ["employees"],
     queryFn: getEmployees,
   });
 
-  // Mutation for deleting an employee
   const deleteMutation = useMutation({
     mutationFn: (id: string) => deleteEmployee(id),
     onSuccess: () => {

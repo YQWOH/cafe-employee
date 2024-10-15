@@ -3,6 +3,6 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     ports:
       - "3000:80"

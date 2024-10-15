@@ -3,11 +3,11 @@ import { Button, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getCafeById, createOrUpdateCafe } from "../services/cafeService"; // Assume these exist
+import { getCafeById, createOrUpdateCafe } from "../services/cafeService";
 
 export default function AddEditCafe() {
   const navigate = useNavigate();
-  const { id } = useParams(); // Check if we're in edit mode
+  const { id } = useParams();
   const queryClient = useQueryClient();
 
   const {
@@ -27,11 +27,11 @@ export default function AddEditCafe() {
   const { data: cafe, isLoading } = useQuery({
     queryKey: ["cafe", id],
     queryFn: () => getCafeById(id!),
-    enabled: !!id, // Only fetch when editing
+    enabled: !!id,
   });
 
   const mutation = useMutation({
-    mutationFn: createOrUpdateCafe, // Correctly use the mutation function
+    mutationFn: createOrUpdateCafe,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
       navigate("/cafes");

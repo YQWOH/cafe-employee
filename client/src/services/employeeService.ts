@@ -1,28 +1,29 @@
 import axios from 'axios';
+import API_ENDPOINTS from '../config';
 
 export const getEmployees = async () => {
-    const response = await axios.get('http://localhost:8800/api/employees');  // Update the URL to match your backend
+    const response = await axios.get(API_ENDPOINTS.EMPLOYEES);
     return response.data;
 };
 
 export const deleteEmployee = async (id: string) => {
-    await axios.delete(`http://localhost:8800/api/employee/${id}`);
+    await axios.delete(`${API_ENDPOINTS.EMPLOYEE}/${id}`);
 };
 
 export const createOrUpdateEmployee = async (employee: any): Promise<void> => {
     if (employee.id) {
-        await axios.put(`http://localhost:8800/api/employee/${employee.id}`, employee);
+        await axios.put(`${API_ENDPOINTS.EMPLOYEE}/${employee.id}`, employee);
     } else {
-        await axios.post('http://localhost:8800/api/employee', employee);
+        await axios.post(API_ENDPOINTS.EMPLOYEE, employee);
     }
 };
 
 export const getEmployeeById = async (id: string) => {
-    const response = await axios.get(`http://localhost:8800/api/employee/${id}`);  // Update the URL to match your backend
+    const response = await axios.get(`${API_ENDPOINTS.EMPLOYEE}/${id}`);
     return response.data;
 }
 
 export const getCafes = async () => {
-    const response = await axios.get('http://localhost:8800/api/cafes');  // Update the URL to match your backend
+    const response = await axios.get(API_ENDPOINTS.CAFES);
     return response.data;
 };

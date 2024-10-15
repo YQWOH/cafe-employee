@@ -24,18 +24,18 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 
 export default function AddEditEmployee() {
   const navigate = useNavigate();
-  const { id } = useParams(); // To check if it's edit mode
+  const { id } = useParams();
   const queryClient = useQueryClient();
 
   const { data: cafes, isLoading } = useQuery({
     queryKey: ["cafes"],
     queryFn: getCafes,
-  }); // Get list of cafés for dropdown
+  });
 
   const { data: employee } = useQuery({
     queryKey: ["employee", id],
     queryFn: () => getEmployeeById(id!),
-    enabled: !!id, // Prefill in edit mode only when `id` is defined
+    enabled: !!id,
   });
 
   const {
@@ -59,14 +59,13 @@ export default function AddEditEmployee() {
   const mutation = useMutation({
     mutationFn: createOrUpdateEmployee,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["employees"] }); // Correct invalidateQueries format
+      queryClient.invalidateQueries({ queryKey: ["employees"] });
       navigate("/employees");
     },
   });
 
   useEffect(() => {
     if (employee) {
-      // Prefill the form if we're in edit mode
       setValue("name", employee.name);
       setValue("email_address", employee.email_address);
       setValue("phone_number", employee.phone_number);

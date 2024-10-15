@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import Cafes from "./pages/Cafes";
 import Employees from "./pages/Employees";
-import AddEditEmployee from "./pages/AddEditEmployee"; // Import the Add/Edit Employee page
-import AddEditCafe from "./pages/AddEditCafe"; // Import the Add/Edit Café page
+import AddEditEmployee from "./pages/AddEditEmployee";
+import AddEditCafe from "./pages/AddEditCafe";
 import { Link } from "react-router-dom";
 import { Button, Box } from "@mui/material";
 
