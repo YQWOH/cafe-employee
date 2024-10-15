@@ -36,8 +36,26 @@ However, for local development, you can use the following:
 
 DB_HOST: MySQL service host (in Docker Compose, it's set to db).
 DB_USER: MySQL root user (default is root).
-DB_PASSWORD: Password for MySQL root user (set in docker-compose.yml).
+DB_PASSWORD: Password for MySQL root user (set in docker-compose.yml or in src/config.ts).
 DB_NAME: MySQL database name (cafe_manager).
+
+Reminder: Update the password in the src/config.ts file for security purposes. The current default password is your_password. Ensure that you replace this password with a secure one before deploying the app:
+
+```typescript
+const config = {
+  database: {
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "your_password",
+    database: process.env.DB_NAME || "cafe_manager",
+    connectionLimit: Number(process.env.DB_CONNECTION_LIMIT) || 10,
+    waitForConnections: true,
+    queueLimit: 0,
+  },
+};
+
+export default config;
+```
 
 ### 3. Dockerize the Application
 
@@ -67,7 +85,7 @@ You can connect to the MySQL database using a MySQL client. Use the following cr
 Host: localhost
 Port: 3306
 Username: root
-Password: as specified in docker-compose.yml (replace your_password with the actual password).
+Password: as specified in docker-compose.yml or src/config.ts (replace your_password with the actual password).
 
 Stopping the Containers
 To stop the running containers, press CTRL + C in the terminal or run:
