@@ -24,8 +24,8 @@ Follow these steps to get the project up and running using Docker.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/cafe-employee-manager.git
-cd cafe-employee-manager
+git clone https://github.com/YQWOH/cafe-employee.git
+cd cafe-employee/api
 ```
 
 ### 2. Set Up Environment Variables

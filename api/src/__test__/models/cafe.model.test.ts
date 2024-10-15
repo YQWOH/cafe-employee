@@ -1,4 +1,3 @@
-// Mock the pool and its query function
 jest.mock('../../db', () => ({
     initializeDB: jest.fn(() => mockPool),
 }));
@@ -16,17 +15,16 @@ describe('cafeModel', () => {
 
     test('getAll should return a list of cafes', async () => {
         const mockCafes = [{ id: 1, name: 'Cafe A' }, { id: 2, name: 'Cafe B' }];
-        mockPool.query.mockResolvedValue([mockCafes, []]); // Correctly mock rows and metadata
+        mockPool.query.mockResolvedValue([mockCafes, []]);
 
         const cafes = await cafeModel.getAll();
-        console.log('cafes: ', cafes); // This should now print the mock data
         expect(mockPool.query).toHaveBeenCalledWith('SELECT * FROM cafes');
         expect(cafes).toEqual(mockCafes);
     });
 
     test('getById should return a cafe by ID', async () => {
         const mockCafe = { id: 1, name: 'Cafe A' };
-        mockPool.query.mockResolvedValue([[mockCafe], []]); // Mock rows and metadata
+        mockPool.query.mockResolvedValue([[mockCafe], []]);
 
         const cafe = await cafeModel.getById('1');
 
@@ -37,7 +35,7 @@ describe('cafeModel', () => {
     test('create should insert a new cafe and return the cafe with ID', async () => {
         const newCafe = { name: 'New Cafe', description: 'Description', location: 'Location', logo: 'logo.png' };
         const mockInsertId = 1;
-        mockPool.query.mockResolvedValue([{ insertId: mockInsertId }, []]); // Mock result and metadata
+        mockPool.query.mockResolvedValue([{ insertId: mockInsertId }, []]);
 
         const result = await cafeModel.create(newCafe);
 
@@ -50,7 +48,7 @@ describe('cafeModel', () => {
 
     test('update should update the cafe and return updated cafe data', async () => {
         const updatedCafeData = { name: 'Updated Cafe', description: 'Updated Description', location: 'Updated Location', logo: 'updated-logo.png' };
-        mockPool.query.mockResolvedValue([{ affectedRows: 1 }, []]); // Mock result and metadata
+        mockPool.query.mockResolvedValue([{ affectedRows: 1 }, []]);
 
         const result = await cafeModel.update('1', updatedCafeData);
 
@@ -62,7 +60,7 @@ describe('cafeModel', () => {
     });
 
     test('deleteEmployeesByCafe should delete employees associated with the cafe', async () => {
-        mockPool.query.mockResolvedValue([[], []]); // Mock rows and metadata
+        mockPool.query.mockResolvedValue([[], []]);
 
         await cafeModel.deleteEmployeesByCafe('1');
 
@@ -73,7 +71,7 @@ describe('cafeModel', () => {
     });
 
     test('delete should delete the cafe and return true if successful', async () => {
-        mockPool.query.mockResolvedValue([{ affectedRows: 1 }, []]); // Mock result and metadata
+        mockPool.query.mockResolvedValue([{ affectedRows: 1 }, []]);
 
         const result = await cafeModel.delete('1');
 
@@ -82,7 +80,7 @@ describe('cafeModel', () => {
     });
 
     test('delete should return false if no cafe is deleted', async () => {
-        mockPool.query.mockResolvedValue([{ affectedRows: 0 }, []]); // Mock result and metadata
+        mockPool.query.mockResolvedValue([{ affectedRows: 0 }, []]);
 
         const result = await cafeModel.delete('1');
 

@@ -1,4 +1,3 @@
-// Mock the pool and its query function
 jest.mock('../../db', () => ({
     initializeDB: jest.fn(() => mockPool),
 }));
@@ -11,17 +10,16 @@ import { employeeModel } from '../../models/employee.model';
 
 describe('employeeModel', () => {
     beforeEach(() => {
-        jest.clearAllMocks(); // Clear previous mocks before each test
+        jest.clearAllMocks();
     });
 
     test('generateUniqueId should return a unique ID', async () => {
-        // Mock the return value for `query` to simulate the database response
-        mockPool.query.mockResolvedValueOnce([[{ count: 0 }], []]); // Mock that the ID does not exist
+        mockPool.query.mockResolvedValueOnce([[{ count: 0 }], []]);
 
         const uniqueId = await employeeModel.generateUniqueId();
 
         expect(mockPool.query).toHaveBeenCalledWith('SELECT COUNT(*) as count FROM employees WHERE id = ?', [expect.any(String)]);
-        expect(uniqueId).toMatch(/^UI[A-Za-z0-9]{7}$/); // Ensure it matches the desired pattern
+        expect(uniqueId).toMatch(/^UI[A-Za-z0-9]{7}$/);
     });
 
     test('getEmployees should return employees filtered by cafe', async () => {
@@ -39,8 +37,8 @@ describe('employeeModel', () => {
     test('getById should return an employee by ID', async () => {
         const mockEmployee = { id: '1', name: 'John' };
         const mockEmployeeCafe = { cafe_id: 1, start_date: '2023-01-01' };
-        mockPool.query.mockResolvedValueOnce([[mockEmployee], []]); // First query for employee
-        mockPool.query.mockResolvedValueOnce([[mockEmployeeCafe], []]); // Second query for employee_cafe
+        mockPool.query.mockResolvedValueOnce([[mockEmployee], []]);
+        mockPool.query.mockResolvedValueOnce([[mockEmployeeCafe], []]);
 
         const employee = await employeeModel.getById('1');
 
@@ -51,8 +49,8 @@ describe('employeeModel', () => {
     test('create should insert a new employee and return the employee with ID', async () => {
         const newEmployee = { name: 'Jane', email_address: 'jane@example.com', phone_number: '98765432', gender: 'Female' };
         const mockId = 'UI1234567';
-        jest.spyOn(employeeModel, 'generateUniqueId').mockResolvedValue(mockId); // Mock generateUniqueId
-        mockPool.query.mockResolvedValue([{}, []]); // Mock insert query
+        jest.spyOn(employeeModel, 'generateUniqueId').mockResolvedValue(mockId);
+        mockPool.query.mockResolvedValue([{}, []]);
 
         const result = await employeeModel.create(newEmployee);
 
@@ -65,7 +63,7 @@ describe('employeeModel', () => {
 
     test('assignToCafe should assign or update an employee to a cafe', async () => {
         const mockRows = [{ employee_id: '1' }];
-        mockPool.query.mockResolvedValueOnce([mockRows, []]); // Mock that the entry already exists
+        mockPool.query.mockResolvedValueOnce([mockRows, []]);
 
         await employeeModel.assignToCafe('1', 1, '2023-01-01');
 
@@ -73,7 +71,7 @@ describe('employeeModel', () => {
     });
 
     test('delete should remove an employee by ID', async () => {
-        mockPool.query.mockResolvedValue([{ affectedRows: 1 }, []]); // Mock successful deletion
+        mockPool.query.mockResolvedValue([{ affectedRows: 1 }, []]);
 
         const result = await employeeModel.delete('1');
 

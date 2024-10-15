@@ -1,9 +1,15 @@
 import express from 'express';
 import { employeesController } from '../controllers/employees.controller';
+import logger from '../utils/logger';
 
 export const router = express.Router();
 
-// Get employees, optionally filtered by cafe and sorted by days worked
 router.get('/', async (req, res) => {
-    await employeesController.getEmployees(req, res);
+    try {
+        logger.info('Fetching all employees');
+        await employeesController.getEmployees(req, res);
+    } catch (error: any) {
+        logger.error('Error fetching employees: %s', error.message);
+        res.status(500).send('Internal Server Error');
+    }
 });

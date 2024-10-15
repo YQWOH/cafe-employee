@@ -1,29 +1,55 @@
 import express from 'express';
 import { employeeController } from '../controllers/employee.controller';
+import logger from '../utils/logger';
 
 export const router = express.Router();
 
-// Get employees, optionally filtered by cafe and sorted by days worked
 router.get('/', async (req, res) => {
-    await employeeController.getEmployees(req, res);
+    try {
+        logger.info('Fetching employees');
+        await employeeController.getEmployees(req, res);
+    } catch (error: any) {
+        logger.error('Error fetching employees: %s', error.message);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-// Get employee by ID
 router.get('/:id', async (req, res) => {
-    await employeeController.getEmployeeById(req, res);
+    try {
+        logger.info(`Fetching employee with ID ${req.params.id}`);
+        await employeeController.getEmployeeById(req, res);
+    } catch (error: any) {
+        logger.error('Error fetching employee by ID: %s', error.message);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-// Create a new employee and establish the relationship with a cafe
 router.post('/', async (req, res) => {
-    await employeeController.createEmployee(req, res);
+    try {
+        logger.info('Creating new employee');
+        await employeeController.createEmployee(req, res);
+    } catch (error: any) {
+        logger.error('Error creating employee: %s', error.message);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-// Update an employee and their relationship with a cafe
 router.put('/:id', async (req, res) => {
-    await employeeController.updateEmployee(req, res);
+    try {
+        logger.info(`Updating employee with ID ${req.params.id}`);
+        await employeeController.updateEmployee(req, res);
+    } catch (error: any) {
+        logger.error('Error updating employee: %s', error.message);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
-// Delete an employee from the database
 router.delete('/:id', async (req, res) => {
-    await employeeController.deleteEmployee(req, res);
+    try {
+        logger.info(`Deleting employee with ID ${req.params.id}`);
+        await employeeController.deleteEmployee(req, res);
+    } catch (error: any) {
+        logger.error('Error deleting employee: %s', error.message);
+        res.status(500).send('Internal Server Error');
+    }
 });

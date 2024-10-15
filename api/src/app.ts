@@ -1,13 +1,13 @@
 import express from "express";
-import { initializeDB, seedData, createTables } from './db'; // Import DB initialization
+import { initializeDB, seedData, createTables } from './db';
 const app = express();
 import { router as cafesRoutes } from "./routes/cafes.route";
 import { router as cafeRoutes } from "./routes/cafe.route";
 import { router as employeesRoutes } from "./routes/employees.route";
 import { router as employeeRoutes } from "./routes/employee.route";
 import cors from "cors";
+import logger from "./utils/logger";
 
-//middlewares
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Credentials", "true");
     next();
@@ -19,27 +19,32 @@ app.use(
     })
 );
 
+app.use((req, res, next) => {
+    logger.info(`Incoming request: ${req.method} ${req.url}`);
+    next();
+});
 
 app.use("/api/cafes", cafesRoutes);
 app.use("/api/cafe", cafeRoutes);
 app.use("/api/employees", employeesRoutes);
 app.use("/api/employee", employeeRoutes);
 
-// Initialize database, create tables, and seed data
 initializeDB()
     .then(async (pool) => {
-        // Ensure the tables are created before seeding data
+        logger.info("Database connection established");
+
         await createTables(pool);
+        logger.info("Database tables created");
 
-        // Optionally run seed data after DB is initialized
         await seedData(pool);
+        logger.info("Database seeded with initial data");
 
-        // Start the server after the database is initialized
         app.listen(8800, () => {
+            logger.info("Server started on port 8800");
             console.log("API working!");
         });
     })
     .catch((error) => {
-        console.error("Failed to initialize database", error);
-        process.exit(1); // Exit the process if the DB initialization fails
+        logger.error(`Failed to initialize database: ${error.message}`);
+        process.exit(1);
     });
