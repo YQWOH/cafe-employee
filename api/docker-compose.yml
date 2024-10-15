@@ -15,7 +15,7 @@ services:
       - db
     volumes:
       - .:/usr/src/app
-    command: npm run dev
+    command: ["./wait-for-mysql.sh", "npm", "run", "dev"]
 
   # MySQL Service
   db:

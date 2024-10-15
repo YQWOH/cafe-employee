@@ -1,5 +1,8 @@
 # Step 1: Use an official Node.js image as the base image
-FROM node:18-alpine
+FROM node:18
+
+# Install netcat for the wait-for-mysql.sh script
+RUN apt-get update && apt-get install -y netcat-openbsd
 
 # Step 2: Set the working directory in the container
 WORKDIR /usr/src/app
@@ -23,5 +26,5 @@ ENV DB_HOST=db \
     DB_NAME=cafe_manager \
     PORT=8800
 
-# Step 8: Start the Node.js app
-CMD ["npm", "run", "dev"]
+# Step 8: Start the Node.js app, but wait for MySQL first
+CMD ["./wait-for-mysql.sh", "npm", "run", "dev"]

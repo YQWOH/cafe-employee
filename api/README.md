@@ -8,6 +8,7 @@ This is a Node.js API for managing cafés and their employees, built with Expres
 - Association between cafés and employees.
 - MySQL database for data storage.
 - Dockerized setup with Docker Compose.
+- Automatic waiting for MySQL service readiness using a custom wait-for-mysql.sh script
 
 ## Prerequisites
 
@@ -55,6 +56,7 @@ This will:
 - Pull and run the MySQL image.
 - Automatically create the cafe_manager database if it doesn't exist.
 - Seed the database with initial data (cafés and employees).
+- Wait for the MySQL database to be ready before starting the API using the wait-for-mysql.sh script.
 
 Access the API
 Once the containers are running, the API will be accessible at: http://localhost:8800
