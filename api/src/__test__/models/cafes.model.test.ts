@@ -1,17 +1,16 @@
-// Mock the pool and its query function
 jest.mock('../../db', () => ({
-    initializeDB: jest.fn(() => mockPool), // Mock the initialization of the pool
+    initializeDB: jest.fn(() => mockPool),
 }));
 
 const mockPool = {
-    query: jest.fn(), // Mock the query function
+    query: jest.fn(),
 };
 
-import { cafesModel } from '../../models/cafes.model'; // Import after mocking
+import { cafesModel } from '../../models/cafes.model';
 
 describe('cafesModel', () => {
     beforeEach(() => {
-        jest.clearAllMocks(); // Clear any previous mock calls
+        jest.clearAllMocks();
     });
 
     test('getCafes should return a list of cafes', async () => {
@@ -19,7 +18,7 @@ describe('cafesModel', () => {
             { id: 1, name: 'Cafe A', description: 'Great place', logo: 'logo1.png', location: 'City A', employees: 5 },
             { id: 2, name: 'Cafe B', description: 'Another great place', logo: 'logo2.png', location: 'City B', employees: 3 },
         ];
-        mockPool.query.mockResolvedValue([mockCafes, []]); // Mock query result
+        mockPool.query.mockResolvedValue([mockCafes, []]);
 
         const cafes = await cafesModel.getCafes();
 
@@ -35,7 +34,7 @@ describe('cafesModel', () => {
         const mockCafes = [
             { id: 1, name: 'Cafe A', description: 'Great place', logo: 'logo1.png', location: 'City A', employees: 5 }
         ];
-        mockPool.query.mockResolvedValue([mockCafes, []]); // Mock query result
+        mockPool.query.mockResolvedValue([mockCafes, []]);
 
         const cafes = await cafesModel.getCafes(location);
 

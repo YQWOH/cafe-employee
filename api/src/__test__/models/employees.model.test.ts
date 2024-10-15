@@ -1,4 +1,3 @@
-// Mock the pool and its query function
 jest.mock('../../db', () => ({
     initializeDB: jest.fn(() => mockPool),
 }));
@@ -9,12 +8,11 @@ const mockPool = {
 
 import { employeesModel } from '../../models/employees.model';
 
-// Helper function to normalize SQL queries by removing extra spaces and line breaks
 const normalizeSQL = (query: string) => query.replace(/\s+/g, ' ').trim();
 
 describe('employeesModel', () => {
     beforeEach(() => {
-        jest.clearAllMocks(); // Clear previous mocks before each test
+        jest.clearAllMocks();
     });
 
     test('getEmployees should return a list of employees without filtering', async () => {
@@ -23,7 +21,7 @@ describe('employeesModel', () => {
             { id: '2', name: 'Jane Smith', email_address: 'jane@example.com', phone_number: '87654321', days_worked: 5, cafe: 'Cafe B' },
         ];
 
-        mockPool.query.mockResolvedValue([mockEmployees, []]); // Mock query result
+        mockPool.query.mockResolvedValue([mockEmployees, []]);
 
         const employees = await employeesModel.getEmployees();
 
@@ -35,7 +33,7 @@ describe('employeesModel', () => {
             LEFT JOIN cafes ON cafes.id = employee_cafe.cafe_id
             ORDER BY days_worked DESC`;
 
-        expect(normalizeSQL(mockPool.query.mock.calls[0][0])).toEqual(normalizeSQL(expectedQuery)); // Normalize both the expected and actual SQL
+        expect(normalizeSQL(mockPool.query.mock.calls[0][0])).toEqual(normalizeSQL(expectedQuery));
         expect(employees).toEqual(mockEmployees);
     });
 
@@ -44,7 +42,7 @@ describe('employeesModel', () => {
             { id: '1', name: 'John Doe', email_address: 'john@example.com', phone_number: '12345678', days_worked: 10, cafe: 'Cafe A' }
         ];
 
-        mockPool.query.mockResolvedValue([mockEmployees, []]); // Mock query result
+        mockPool.query.mockResolvedValue([mockEmployees, []]);
 
         const employees = await employeesModel.getEmployees('Cafe A');
 
@@ -57,7 +55,7 @@ describe('employeesModel', () => {
             WHERE cafes.name = ? 
             ORDER BY days_worked DESC`;
 
-        expect(normalizeSQL(mockPool.query.mock.calls[0][0])).toEqual(normalizeSQL(expectedQuery)); // Normalize both the expected and actual SQL
+        expect(normalizeSQL(mockPool.query.mock.calls[0][0])).toEqual(normalizeSQL(expectedQuery));
         expect(employees).toEqual(mockEmployees);
     });
 });

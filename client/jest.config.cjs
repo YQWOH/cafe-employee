@@ -1,8 +1,8 @@
 module.exports = {
     preset: 'ts-jest',
-    testEnvironment: 'jest-environment-jsdom', // Use 'jsdom' for testing browser-like environments (frontend)
+    testEnvironment: 'jest-environment-jsdom',
     transform: {
-        '^.+\\.tsx?$': 'ts-jest', // Transform .ts/.tsx files using ts-jest
+        '^.+\\.tsx?$': 'ts-jest',
     },
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'], // File extensions to consider
+    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };
